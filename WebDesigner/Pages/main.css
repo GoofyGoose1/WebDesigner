@@ -456,6 +456,11 @@
         }
 
     @media (max-width: 768px) {
+    .header { 
+        max-width: 100%;
+        display: block;
+}
+    
     .main-content {
         flex-direction: column;
         height: auto;
@@ -463,6 +468,7 @@
 
     .sidebar,
     .properties-panel {
+        max-width: 100%;
         width: 100%;
         order: 1;
         padding: 20px;
