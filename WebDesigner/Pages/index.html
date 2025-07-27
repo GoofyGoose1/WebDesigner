@@ -8,66 +8,88 @@
     <title>Web designer - Marketing campaign</title>
 </head>
 <body>
+
+    <!-- ===== LOGIN & REGISTER SECTION ===== -->
       <div class="auth-container" id="authContainer">
         <div class="auth-box">
+
+            <!-- Logo and Tagline -->
             <div class="logo">
                 <h1>Web Designer</h1>
                 <p>Create stunning websites with ease</p>
             </div>
-            
+            <!-- Tabs for Login and Register -->
             <div class="auth-tabs">
                 <div class="auth-tab active" data-tab="login">Login</div>
                 <div class="auth-tab" data-tab="register">Register</div>
             </div>
-            
+            <!-- == LOGIN FORM == -->
             <form id="loginForm">
+                <!-- Email Input -->
                 <div class="form-group">
                     <label>Email</label>
                     <input type="email" placeholder="Enter your email" required>
                 </div>
+                <!-- Password Input -->
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" placeholder="Enter your password" required>
                 </div>
+                <!-- Submit Button -->
                 <button type="submit" class="auth-btn">Sign In</button>
             </form>
             
+            <!-- == REGISTERATION FORM (Initially Hidden) == -->
             <form id="registerForm" style="display: none;">
+                <!-- Full Name Input -->
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" placeholder="Enter your full name" required>
                 </div>
+                <!-- Email Input -->
                 <div class="form-group">
                     <label>Email</label>
                     <input type="email" placeholder="Enter your email" required>
                 </div>
+                <!-- Password Input -->
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" placeholder="Create a password" required>
                 </div>
+                <!-- Confirm Password Input -->
                 <div class="form-group">
                     <label>Confirm Password</label>
                     <input type="password" placeholder="Confirm your password" required>
                 </div>
+                <!-- Register Button -->
                 <button type="submit" class="auth-btn">Create Account</button>
             </form>
         </div>
     </div>
+    <!-- ===== END LOGIN & REGISTER SECTION ===== -->
 
+    <!-- ===== DASHBOARD SECTION ===== -->
     <div class="dashboard-container" id="dashboardContainer" style="display:none;">
         <div class="dashboard">
             <h2 class="logo">Welcome back!</h2>
             <p>Select a site to edit or create a new one</p>
+            <!-- Button to Create New Site -->
             <button class="btn btn-primary" onclick="createNewSite()">+ New Site</button>
+            <!-- List of User Sites -->
             <div id="siteList" class="site-list"></div>
         </div>
     </div>
+    <!-- ===== END DASHBOARD SECTION ===== -->
 
+    <!-- ===== BUILDER APP ===== -->
     <div class="app-container" id="appContainer">
+        <!-- Header Section -->
         <header class="header">
+            <!-- App Logo-->
             <div class="logo">
                 <h2>Web Designer</h2>
             </div>
+            <!-- Toolbar Buttons-->
             <div class="header-actions">
                 <button class="btn btn-secondary" onclick="previewSite()">Preview</button>
                 <button class="btn btn-secondary" onclick="exportSite()">Export</button>
@@ -76,30 +98,38 @@
             </div>
         </header>
 
+        <!-- == MAIN CONTENT AREA == -->
         <div class="main-content">
+            <!-- Sidebar: Design Elements & Layout -->
             <aside class="sidebar">
                 <h3>🎨 Design Elements</h3>
                 <div class="element-grid">
+                    <!-- Banner Element -->
                     <div class="element-item" draggable="true" data-type="banner">
                         <div class="element-icon">🎯</div>
                         <span>Banner</span>
                     </div>
+                    <!-- Text Box Element -->
                     <div class="element-item" draggable="true" data-type="text">
                         <div class="element-icon">📝</div>
                         <span>Text Box</span>
                     </div>
+                    <!-- Image Element -->
                     <div class="element-item" draggable="true" data-type="image">
                         <div class="element-icon">🖼️</div>
                         <span>Image</span>
                     </div>
+                    <!-- Button Element -->
                     <div class="element-item" draggable="true" data-type="button">
                         <div class="element-icon">🔘</div>
                         <span>Button</span>
                     </div>
+                    <!-- Form Element -->
                     <div class="element-item" draggable="true" data-type="form">
                         <div class="element-icon">📋</div>
                         <span>Form</span>
                     </div>
+                    <!-- CTA Form Element-->
                     <div class="element-item" draggable="true" data-type="ctaform">
                         <div class="element-icon">📨</div>
                         <span>CTA Form</span>
@@ -108,10 +138,12 @@
 
                 <h3>📱 Layout</h3>
                 <div class="element-grid">
+                    <!-- Section Layout -->
                     <div class="element-item" draggable="true" data-type="section">
                         <div class="element-icon">📦</div>
                         <span>Section</span>
                     </div>
+                    <!-- Columns Layout -->
                     <div class="element-item" draggable="true" data-type="columns">
                         <div class="element-icon">📊</div>
                         <span>Columns</span>
@@ -119,8 +151,10 @@
                 </div>
             </aside>
 
+            <!-- == MAIN CANVAS AREA == -->
             <main class="canvas-area">
                 <div class="canvas" id="canvas">
+                    <!-- Default Welcome Message -->
                     <div class="welcome-message">
                         <h3>Welcome to Web Designer</h3>
                         <p>Drag and drop elements from the sidebar to start building your website</p>
@@ -128,6 +162,7 @@
                 </div>
             </main>
 
+            <!-- Properties Panel -->
             <aside class="properties-panel">
                 <h3>⚙️ Properties</h3>
                 <div id="propertiesContent">
@@ -138,12 +173,14 @@
             </aside>
         </div>
 
+        <!-- Floating Toolbar (Undo, Redo, Delete) -->
         <div class="floating-toolbar">
             <button class="toolbar-btn" onclick="undoAction()" title="Undo">↶</button>
             <button class="toolbar-btn" onclick="redoAction()" title="Redo">↷</button>
             <button class="toolbar-btn" onclick="deleteSelected()" title="Delete">🗑️</button>
         </div>
     </div>
+    <!-- ===== END BUILDER APP ===== -->
 
 </body>
 </html>
