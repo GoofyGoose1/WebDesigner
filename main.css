@@ -494,7 +494,7 @@
     .header { 
         max-width: 100%;
         display: block;
-}
+    }
     
     .main-content {
         flex-direction: column;
