@@ -16,7 +16,7 @@
             <!-- Logo and Tagline -->
             <div class="logo">
                 <h1>Web Designer</h1>
-                <p>Create stunning websites with ease</p>
+                <p>Professional web design platform</p>
             </div>
             <!-- Tabs for Login and Register -->
             <div class="auth-tabs">
@@ -94,7 +94,7 @@
                 <button class="btn btn-secondary" onclick="previewSite()">Preview</button>
                 <button class="btn btn-secondary" onclick="exportSite()">Export</button>
                 <button class="btn btn-secondary" onclick="logout()">Logout</button>
-                <button class="btn btn-secondary" onclick="saveSite()">Save</button>
+                <button class="btn btn-secondary" onclick="openSaveModal()">Save</button>
             </div>
         </header>
 
@@ -182,5 +182,20 @@
     </div>
     <!-- ===== END BUILDER APP ===== -->
 
+    <!-- == SITE MODAL - SaveBtn == -->
+    <div id="siteNameModal" style="display: none;" class="modal-backdrop">
+        <div class="auth-container">
+        <div class="auth-box">
+            <label for="siteNameInput">Enter site name:</label>
+            <input class="siteNameInput" id="siteNameInput" type="text" placeholder="My Campaign">
+            <div class="modal-buttons">
+                <button class="confirmBtn" id="confirmBtn">Confirm</button>
+                <button class="cancelBtn" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+    </body>
 </body>
 </html>

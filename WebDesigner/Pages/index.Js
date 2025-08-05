@@ -6,6 +6,7 @@ let draggedElement = null;  // USED WHILE MOVING ELEMENTS AROUND THE CANVAS
 let elementCounter = 0; // EACH TIME AN ELEMENT IS ADDED. THIS COUNTER CAN BE INCREMENTED
 let actionHistory = []; // EACH ENTRY IS USUALLY A SNAPSHOT OF `CANVAS.INNERHTML`
 let historyIndex = -1;  // NO ACTION YET, 0 = FIRST ACTION, ETC.
+let currentSiteName = null;
 
 // ========== TAB SWITCHING (Login/Register) ==========
 function switchTab(tab, event) {
@@ -270,7 +271,14 @@ if (type === 'image') {
     const imgTag = imageElement.querySelector('img');
 
     // When the user clicks on the image container, trigger the file input click
-    imageElement.addEventListener('click', () => fileInput.click());
+    imageElement.addEventListener('click', () => {
+        const img = imageElement.querySelector('img');
+        const hasImage = img && img.src && img.style.display !== 'none';
+        
+        if (!hasImage) {
+            fileInput.click();
+        }
+    });
 
     // Listen for a file selection event (When the user chooses an image)
     fileInput.addEventListener('change', (event) => {
@@ -588,26 +596,75 @@ function previewSite() {
     `);
 }
 
+// == MODAL VIEW ==
+function openSaveModal() {
+    const input = document.getElementById('siteNameInput');
+    input.value = currentSiteName || '';
+    document.getElementById('siteNameModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('siteNameModal').style.display = 'none';
+    document.getElementById('siteNameInput').value = ''; 
+}
+// == END MODAL VIEW ==
+
+document.getElementById('confirmBtn').addEventListener('click', () => {
+    const siteName = document.getElementById('siteNameInput').value.trim();
+    if (!siteName) {
+        alert("Please enter a site name.");
+        return;
+    }
+    saveSite(siteName);
+    closeModal();
+    currentSiteName = siteName;
+});
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+    closeModal();
+});
+
 // == SAVESITE - Save the current site to localStorage ==
-function saveSite() {
+function saveSite(siteName) {
     if (!currentUser) {
         alert("Please log in to save.");
         return;
     }
+
+    siteName = siteName?.trim();
+    if (!siteName) {
+        alert("Please enter a site name.");
+        return;
+    }
+
     const sites = JSON.parse(localStorage.getItem('sites') || '{}');
     const userSites = sites[currentUser.email] || [];
     const siteHTML = canvas.innerHTML;
     const campaignType = canvas.dataset.campaignType || "general";
-    const siteData = {
-        id: Date.now(),
-        name: prompt("Enter site name:", "My Campaign") || "Untitled",
-        content: siteHTML,
-        type: campaignType
-    };
-    userSites.push(siteData);
+
+    const existingSiteIndex = userSites.findIndex(site => site.name === siteName);
+
+    if (existingSiteIndex !== -1) {
+        
+        userSites[existingSiteIndex].content = siteHTML;
+        userSites[existingSiteIndex].type = campaignType;
+        userSites[existingSiteIndex].updatedAt = Date.now();
+        alert("Site updated successfully!");
+    } else {
+    
+        const siteData = {
+            id: Date.now(),
+            name: siteName,
+            content: siteHTML,
+            type: campaignType,
+            createdAt: Date.now()
+        };
+        userSites.push(siteData);
+        alert("New site saved successfully!");
+    }
+    
     sites[currentUser.email] = userSites;
     localStorage.setItem('sites', JSON.stringify(sites));
-    alert("Site saved successfully!");
 }
 
 // == EXPORTSITE - Export the current site as a downloadable HTML file ==
@@ -982,13 +1039,12 @@ function showApp() {
 
 // == CREATENEWSITE - Create a new site with a selected campaign type ==
 function createNewSite() {
-    const type = prompt("Choose campaign type:\n1 - Landing Page\n2 - Email Campaign\n3 - Marketing Page", "1");
+    const type = prompt("Choose campaign type:\n1 - Landing Page\n2 - Marketing Page", "1");
 
     let campaignType = "landing";
     if ( type === "1") campaignType = "landing";
-    else if (type === "2") campaignType = "email";
-    else if (type === "3") campaignType = "marketing";
-    else if (!"1", "2", "3") return alert('Please entr a valid number.') 
+    else if (type === "2") campaignType = "marketing";
+    else if (!"1", "2") return alert('Please enter a valid number.')
 
     document.getElementById('dashboardContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
@@ -1041,7 +1097,7 @@ function loadSite(id) {
     document.getElementById('appContainer').style.display = 'block';
     document.getElementById('canvas').innerHTML = site.content;
     canvas.dataset.campaignType = site.type || "general";
-
+    currentSiteName = site.name;
     rebindEvents(); // Rebind events since innerHTML replacment clears them
 }
 
@@ -1095,4 +1151,5 @@ window.updateSize = updateSize;
 window.updateImageSize = updateImageSize;
 window.createNewSite = createNewSite;
 window.loadSite = loadSite;
-window. deleteSite = deleteSite;
+window.deleteSite = deleteSite;
+window.openSaveModal = openSaveModal;

@@ -4,9 +4,60 @@
             box-sizing: border-box;
         }
 
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            color: white;
+            min-width: 300px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #000000;
+            background: rgb(32, 31, 31);
+            color: black;
+        }
+        
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .cancelBtn {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            padding: 2px 15px;
+            border-radius: 5px;
+        }
+
+        .confirmBtn {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            padding: 2px 15px;
+            border-radius: 5px;
+        }
+
+        .siteNameInput {
+            background-color: #383232;
+            padding: 4px;
+        }
+    
         body {
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #764ba2 100%);
+            background: rgb(206, 206, 206);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -20,9 +71,8 @@
         }
 
         .auth-box {
-            background: #764ba236;
+            background: #ffffff;
             backdrop-filter: blur(20px);
-            border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 400px;
@@ -44,7 +94,7 @@
 
         .logo h1 {
             font-size: 2.5rem;
-            background: linear-gradient(135deg, #5f5f5f, #c000e3);
+            background: linear-gradient(135deg, #5f5f5f, #000000);
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 800;
@@ -68,22 +118,21 @@
             flex: 1;
             padding: 12px;
             text-align: center;
-            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            color: #000000;
+            color: #838383;
         }
 
         .auth-tab.active {
             background: white;
-            color: #667eea;
+            color: #000000;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .dashboard-container {
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #764ba2 100%);
+            background: rgb(206, 206, 206);
             backdrop-filter: blur(20px);
             min-height: 100vh;
             align-items: center;
@@ -91,9 +140,8 @@
         }
 
         .dashboard {
-            background: #764ba236;
+            background: #ffffff;
             backdrop-filter: blur(20px);
-            border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 400px;
@@ -101,7 +149,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             transform: translateY(0);
             transition: all 0.3s ease;
-            color: white;
+            color: rgb(0, 0, 0);
         }
 
         .site-list {
@@ -138,8 +186,7 @@
         .form-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #00000060;
-            border-radius: 12px;
+            border: 1px solid #44434360;
             font-size: 1rem;
             transition: all 0.3s ease;
             background: rgb(255, 255, 255);
@@ -155,12 +202,10 @@
         .auth-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #000000, #764ba2);
+            background: linear-gradient(135deg, #000000, #000000);
             color: white;
             border: none;
-            border-radius: 12px;
             font-size: 1rem;
-            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
@@ -190,7 +235,7 @@
         }
 
         .header .logo h2 {
-            background: linear-gradient(135deg, #000000, #c000e3);            
+            background: linear-gradient(135deg, #5f5f5f, #000000);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -206,7 +251,6 @@
 
         .btn {
             padding: 10px 20px;
-            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 500;
@@ -214,7 +258,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #000000, #764ba2);
+            background: linear-gradient(135deg, #000000, #000000);
             color: white;
             margin: 7px;
         }
@@ -318,7 +362,7 @@
         }
 
         .banner-element {
-            background: linear-gradient(135deg, #000000 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5f5f5f, #000000);
             color: white;
             padding: 40px;
             text-align: center;
