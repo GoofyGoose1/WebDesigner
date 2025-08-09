@@ -792,7 +792,7 @@ function exportSite() {
         .auth-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #000000, #764ba2);
+            background: linear-gradient(135deg, #000000, #000000ff);
             color: white;
             border: none;
             border-radius: 12px;
@@ -852,13 +852,13 @@ function exportSite() {
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #000000, #764ba2);
+            background: linear-gradient(135deg, #000000, #000000ff);
             color: white;
         }
 
         .btn-secondary {
             background: #e2e8f0;
-            color: #475569;
+            color: #383838ff;
         }
 
         .btn:hover {
@@ -939,7 +939,7 @@ function exportSite() {
         }
 
         .banner-element {
-            background: linear-gradient(135deg, #000000 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #807e81ff 100%);
             color: white;
             padding: 40px;
             text-align: center;
