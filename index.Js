@@ -50,6 +50,8 @@ document.getElementById('loginForm').addEventListener('submit', function (elemen
     // Validate Login
     if (user) {
         currentUser = user;
+        const welcome = document.getElementById('welcomeMessage');
+        welcome.textContent =  `Welcome ${currentUser.userName}!`;
         showApp();
     } else {
         alert('Invalid Username or password. Please register first.');
