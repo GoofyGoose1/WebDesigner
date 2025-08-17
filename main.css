@@ -490,6 +490,32 @@
             padding: 5px;
         }
 
+        .consent-backdrop {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            align-items: center; 
+            justify-content: center;
+            background: rgba(68, 68, 68, 0.76);
+            z-index: 9999;
+        }
+
+        .consent-modal {
+            background: #ffffff; width: min(520px, 92vw);
+            border-radius: 14px; padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            line-height: 25px;
+        }
+
+        .consent-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
     @media (max-width: 768px) {
     .header { 
         max-width: 100%;

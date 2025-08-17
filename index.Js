@@ -7,6 +7,7 @@ let elementCounter = 0; // EACH TIME AN ELEMENT IS ADDED. THIS COUNTER CAN BE IN
 let actionHistory = []; // EACH ENTRY IS USUALLY A SNAPSHOT OF `CANVAS.INNERHTML`
 let historyIndex = -1;  // NO ACTION YET, 0 = FIRST ACTION, ETC.
 let currentSiteName = null;
+const CONSENT_KEY = "cookie-consent";
 
 // ========== TAB SWITCHING (Login/Register) ==========
 function switchTab(tab, event) {
@@ -28,7 +29,9 @@ function switchTab(tab, event) {
 
 // ========== DOM CONTENT LOADED EVENTS ==========
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    showConsent();
+
     document.querySelectorAll('.auth-tab').forEach(tab => {
         tab.addEventListener('click', (event) => {
             const selectedTab = event.target.innerText.toLowerCase(); 
@@ -60,6 +63,7 @@ document.getElementById('loginForm').addEventListener('submit', function (elemen
 // ========== END LOGIN FORM SUBMIT ==========
 
 // ========== REGISTER FORM SUBMIT ==========
+
 document.getElementById('registerForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -235,7 +239,7 @@ function createCanvasElement(type, x, y) {
             <input type="text" placeholder="Your Username" style="display:block; margin-bottom:10px; width:100%; padding:8px; color: grey"/>
             </form>`;
             element.style.width = '250px';
-            element.style.hight = 'auto';
+            element.style.height = 'auto';
             break;
         // Columns Case
         case 'columns':
@@ -298,7 +302,7 @@ if (type === 'image') {
             imgTag.src = e.target.result;   // Set the <img> source to the uplaoded file
             imgTag.style.display = 'block';     // Make sure the image is visible
             imageElement.querySelector('p').style.display = 'none';     // Hide the "Click to uplaod" placeholder text
-            addToHistory();     // Save the current state for Undo/Redo functionality
+            addToHistory();     
         };
         // Start reading the file as a Data URL 
         reader.readAsDataURL(file);
@@ -576,22 +580,6 @@ function rebindEvents() {
         });
         makeDraggable(element); // Ensure element stay draggable 
     });
-}
-
-// == PREVIEWSITE - Preview the current site in a new window == 
-function previewSite() {
-    const previewWindow = window.open('', '_blank');
-    const canvasContent = canvas.innerHTML;
-    previewWindow.document.write(`
-        <html>
-        <head><title>Preview</title></head>
-        <body style="margin: 0; padding: 20px; background: #f8fafc;">
-            <div style="background: white; min-height: 100vh; position: relative;">
-                ${canvasContent}
-            </div>
-        </body>
-        </html>
-    `);
 }
 
 // == MODAL VIEW ==
@@ -1015,7 +1003,7 @@ function exportSite() {
         .upload-bg-image {
             display: none;
         }
-    }
+            
     </style>
 </head>
 <body>
@@ -1050,8 +1038,10 @@ function createNewSite() {
         );
         if ( type === null) return;
         if ( type === "1") break; 
-        alert('Please enter a valid number.')
+        alert('Please enter 1.')
     }
+
+    const campaignType = "custom";
 
     document.getElementById('dashboardContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
@@ -1321,7 +1311,7 @@ function featureList(items, WRAP, width, top, left = 40) {
     </div>`;
 }
 
-function previewSiteCanvas() {
+function previewSite() {
   const canvas = document.getElementById('canvas');
   const type = canvas.dataset.campaignType || 'general';
   const wrapStart = (type === 'marketing')
@@ -1347,11 +1337,42 @@ function ensureAppView() {
     if (app) app.style.display = 'block'
 } 
 
+function disableAuth(disabled) {
+    document
+    .querySelectorAll('#loginForm input, #loginForm button, #registerForm input, #registerForm button')
+    .forEach(el => { el.disabled = disabled; });
+}
+
+function showConsent() {
+  const accepted = localStorage.getItem(CONSENT_KEY) === 'true';
+  const popup = document.getElementById('cookieConsent');
+
+  if (!accepted) {
+    popup.style.display = 'flex';
+    popup.setAttribute('aria-hidden', 'false');
+    disableAuth(true);
+  } else {
+    popup.style.display = 'none';
+    popup.setAttribute('aria-hidden', 'true');
+    disableAuth(false);
+  }
+
+  document.getElementById('consentAccept').addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'true');
+    popup.style.display = 'none';
+    popup.setAttribute('aria-hidden', 'true');
+    disableAuth(false);
+  });
+
+  document.getElementById('consentDecline').addEventListener('click', () => {
+    alert('You must accept to use the app.');
+  });
+}
+
 // Expose functions globally for inline events handlers
 window.updateFontSize = updateFontSize;
 window.updateFontFamily = updateFontFamily;
 window.switchTab = switchTab;
-window.previewSite = previewSite;
 window.saveSite = saveSite;
 window.exportSite = exportSite;
 window.undoAction = undoAction;
@@ -1369,4 +1390,6 @@ window.deleteSite = deleteSite;
 window.openSaveModal = openSaveModal;
 window.startLanding = startLanding;
 window.startMarketing = startMarketing;
-window.previewSite = previewSiteCanvas;
+window.previewSite = previewSite;
+
+
