@@ -1311,7 +1311,23 @@ function featureList(items, WRAP, width, top, left = 40) {
     </div>`;
 }
 
+// == PREVIEWSITE - Preview the current site in a new window == 
 function previewSite() {
+    const previewWindow = window.open('', '_blank');
+    const canvasContent = canvas.innerHTML;
+    previewWindow.document.write(`
+        <html>
+        <head><title>Preview</title></head>
+        <body style="margin: 0; padding: 20px; background: #f8fafc;">
+            <div style="background: white; min-height: 100vh; position: relative;">
+                ${canvasContent}
+            </div>
+        </body>
+        </html>
+    `);
+}
+
+function previewSiteCanvas() {
   const canvas = document.getElementById('canvas');
   const type = canvas.dataset.campaignType || 'general';
   const wrapStart = (type === 'marketing')
@@ -1391,5 +1407,6 @@ window.openSaveModal = openSaveModal;
 window.startLanding = startLanding;
 window.startMarketing = startMarketing;
 window.previewSite = previewSite;
+window.previewSiteCanvas = previewSiteCanvas;
 
 
