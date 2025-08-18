@@ -1,33 +1,28 @@
-
-// ========== GLOBAL VARIABLES ========== 
-let currentUser = null; // NO USER LOGGED IN ? REMAIN NULL
-let selectedElement = null; // HOLD A REFERENCE TO A DOM ELEMENT OR REMAIN NULL IN NON IS SELECTED
-let draggedElement = null;  // USED WHILE MOVING ELEMENTS AROUND THE CANVAS
-let elementCounter = 0; // EACH TIME AN ELEMENT IS ADDED. THIS COUNTER CAN BE INCREMENTED
-let actionHistory = []; // EACH ENTRY IS USUALLY A SNAPSHOT OF `CANVAS.INNERHTML`
-let historyIndex = -1;  // NO ACTION YET, 0 = FIRST ACTION, ETC.
+let currentUser = null; 
+let selectedElement = null; 
+let draggedElement = null;  
+let elementCounter = 0; 
+let actionHistory = []; 
+let historyIndex = -1;  
 let currentSiteName = null;
 const CONSENT_KEY = "cookie-consent";
 
-// ========== TAB SWITCHING (Login/Register) ==========
+// TAB SWITCHING (Login/Register) 
 function switchTab(tab, event) {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const tabs = document.querySelectorAll('.auth-tab');
 
-    // Remove active class from all tabs
     tabs.forEach(tabs => tabs.classList.remove('active'));
 
-    // Highlight the clicked tab
     event.target.classList.add('active');
 
-    // Show the corresponding form
     loginForm.style.display = tab === 'login' ? 'block' : 'none';
     registerForm.style.display = tab === 'register' ? 'block' : 'none';
 }
-// ========== END TAB SWITCHING (Login/Register) ==========
 
-// ========== DOM CONTENT LOADED EVENTS ==========
+
+// DOM CONTENT LOADED EVENTS 
 document.addEventListener('DOMContentLoaded', () => {
 
     showConsent();
@@ -39,31 +34,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-// ========== LOGIN FORM SUBMIT ==========
+// LOGIN FORM SUBMIT - DOM Content loaded events
 document.getElementById('loginForm').addEventListener('submit', function (element) {
     element.preventDefault();
 
     const userName = this.querySelector('input[type="text"]').value.trim();
     const password = this.querySelector('input[type="password"]').value;
 
-    // Get users from localStorage 
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     const user = users.find(u => u.userName === userName && u.password === password);
 
-    // Validate Login
     if (user) {
         currentUser = user;
         const welcome = document.getElementById('welcomeMessage');
-        welcome.textContent =  `Welcome ${currentUser.userName}!`;
+        welcome.textContent = `Welcome ${currentUser.userName}!`;
         showApp();
     } else {
         alert('Invalid Username or password. Please register first.');
     }
 });
-// ========== END LOGIN FORM SUBMIT ==========
+// END LOGIN FORM SUBMIT
 
-// ========== REGISTER FORM SUBMIT ==========
-
+// REGISTER FORM SUBMIT - DOM Content loaded events
 document.getElementById('registerForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -72,7 +64,6 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
     const password = this.querySelector('input[placeholder="Create a Password"]').value;
     const confirmPassword = this.querySelector('input[placeholder="Confirm your Password"]').value;
 
-    // Check if password match
     if (password !== confirmPassword) {
         alert('Passwords do not match.');
         return;
@@ -80,13 +71,11 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
 
     let users = JSON.parse(localStorage.getItem('users') || '[]');
 
-    // Prevent duplicate registration
     if (users.find(u => u.userName === userName)) {
         alert('User already registered. Please log in.');
         return;
     }
 
-    // Save new User 
     const newUser = { name: fullName, userName, password };
     users.push(newUser);
     localStorage.setItem('users', JSON.stringify(users));
@@ -94,9 +83,9 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
     alert('Registration successful. Please log in.');
     switchTab('login', { target: document.querySelector('.auth-tab[data-tab="login"]') });
 });
-// ========== END REGISTER FORM SUBMIT ==========
+// END REGISTER FORM SUBMIT 
 
-// ========== DRAG & DROP ELEMENTS ==========
+// DRAG & DROP ELEMENTS - DOM Content loaded events
 document.querySelectorAll('.element-item').forEach(item => {
         item.addEventListener('dragstart', function (e) {
             draggedElement = this.dataset.type;
@@ -127,7 +116,6 @@ document.querySelectorAll('.element-item').forEach(item => {
         draggedElement = null;
     });
 
-    // Deselect elements when clicking outside
     canvas.addEventListener('click', function (e) {
         if (e.target === canvas) {
             document.querySelectorAll('.canvas-element').forEach(el => el.classList.remove('selected'));
@@ -137,18 +125,18 @@ document.querySelectorAll('.element-item').forEach(item => {
         }
     });
 });
-// ========== END DOM CONTENT LOADED EVENTS ==========
 
-// ========== LOGOUT FUNCTION ==========
+
+
 function logout() {
     currentUser = null;
     document.getElementById('authContainer').style.display = 'flex';
     document.getElementById('appContainer').style.display = 'none';
     document.getElementById('canvas').innerHTML = '<div class="welcome-message"><h3>Welcome to Web Designer</h3><p>Drag and drop elements from the sidebar to start building your website</p></div>';
 }
-// ========== END LOGOUT FUNCTION ==========
 
-// ========== CREATE ELEMENT ON CANVAS ==========
+
+ 
 function createCanvasElement(type, x, y) {
     elementCounter++;
     const element = document.createElement('div');
@@ -161,9 +149,9 @@ function createCanvasElement(type, x, y) {
     const welcomeMsg = canvas.querySelector('.welcome-message');
     if (welcomeMsg) welcomeMsg.remove();
 
-    // Different element templates based on type
+   
     switch (type) {
-        // CTA Form Case
+        
         case 'ctaform':
             element.innerHTML = `
             <form class="form-element" style="padding: 15px; background: #f8fafc; border: 1px dashed #ccc; border-radius: 10px;">
@@ -174,7 +162,7 @@ function createCanvasElement(type, x, y) {
             element.style.width = '280px';
             element.style.height = 'auto';
             break;
-        // Banner Case    
+          
         case 'banner':
             const sizeChoice = prompt("Choose banner size:\n1 - 250x250\n2 - 300x600\n3 - CUSTOMIZED",  "1");
             let width = 250;
@@ -206,7 +194,7 @@ function createCanvasElement(type, x, y) {
             element.style.width = width + 'px';
             element.style.height = height + 'px';
             break;
-        // Text Case
+      
         case 'text':
             element.innerHTML = `
             <div class="text-element" contenteditable="true" style="background-size: cover; background-position: center;">
@@ -218,7 +206,7 @@ function createCanvasElement(type, x, y) {
             </div>`;            
             element.style.width = '200px';
             break;
-        // Image Case
+        
         case 'image':
             element.innerHTML = `
             <div class="image-element" style="text-align:center; cursor:pointer;">
@@ -227,11 +215,11 @@ function createCanvasElement(type, x, y) {
             <img src="" style="max-width:500px; max-height:500px; display:none; margin-top:10px;" />
             </div>`;
             break;
-        // Button Case
+     
         case 'button':
             element.innerHTML = '<button class="btn btn-primary">Click Me</button>';
             break;
-        // From Case
+      
         case 'form':
             element.innerHTML = `
             <form class="form-element">
@@ -241,7 +229,7 @@ function createCanvasElement(type, x, y) {
             element.style.width = '250px';
             element.style.height = 'auto';
             break;
-        // Columns Case
+      
         case 'columns':
             element.innerHTML = `
             <div style="display: flex; gap: 10px;">
@@ -251,7 +239,7 @@ function createCanvasElement(type, x, y) {
             element.style.width = '400px';
             element.style.height = 'auto';
             break;
-        // Section Case
+       
         case 'section':
             element.innerHTML = `
             <div style="padding: 20px; background: #f3f4f6; border: 1px dashed #cbd5e1;" contenteditable="true">
@@ -260,24 +248,17 @@ function createCanvasElement(type, x, y) {
             element.style.width = '400px';
             element.style.height = '150px';
             break;
-        // Default Case
+       
         default:
             element.innerHTML = `<div style="padding: 15px; background: #f3f4f6; border-radius: 6px;">${type.charAt(0).toUpperCase() + type.slice(1)} Element</div>`;
     }
 
-// Special handling for image element uplaod
 if (type === 'image') {
 
-    // Select the main image container within the newly created element
     const imageElement = element.querySelector('.image-element');
-
-    // Get the hidden file input element used to uplaod an image 
     const fileInput = imageElement.querySelector('input[type="file"]');
-
-    // Get the <img> tag where the uplaoded image will be displayed
     const imgTag = imageElement.querySelector('img');
 
-    // When the user clicks on the image container, trigger the file input click
     imageElement.addEventListener('click', () => {
         const img = imageElement.querySelector('img');
         const hasImage = img && img.src && img.style.display !== 'none';
@@ -291,41 +272,34 @@ if (type === 'image') {
     fileInput.addEventListener('change', (event) => {
         // Get the selected file (first file only)
         const file = event.target.files[0];
-        // If no file is selected, stop the function
         if (!file) return;
-
-        // Create a new FileReader to read the selcted image file 
         const reader = new FileReader();
 
-        // When the file is fully read, update the <img> source
         reader.onload = function (e) {
-            imgTag.src = e.target.result;   // Set the <img> source to the uplaoded file
-            imgTag.style.display = 'block';     // Make sure the image is visible
-            imageElement.querySelector('p').style.display = 'none';     // Hide the "Click to uplaod" placeholder text
+            imgTag.src = e.target.result;   
+            imgTag.style.display = 'block';    
+            imageElement.querySelector('p').style.display = 'none';   
             addToHistory();     
         };
-        // Start reading the file as a Data URL 
+        
         reader.readAsDataURL(file);
     });
 }
 // End Spacial handling for image element uplaod
 
-    // Make the element draggable
     makeDraggable(element);
     element.addEventListener('click', function (e) {
-        e.stopPropagation();    // Prevent the click event from propagating to the canvas ( Avoids deselecting element)
-        selectElement(this);    // Mark this element as the currently selected element
+        e.stopPropagation();  
+        selectElement(this); 
     });
-    // Add the element to the canvas
+   
     canvas.appendChild(element);
-    // Immediatly select the newly added element so its properties are displayed
     selectElement(element);
-    // Save the current state of the canvas to the action history (for Undo/Redo)
     addToHistory();
 }
-// ========== END CREATE ELEMENT ON CANVAS =========
+ 
 
-// ========== DRAGGABLE FUNCTIONALITY ==========
+
 function makeDraggable(element) {
     
     let isDragging = false;
@@ -335,7 +309,7 @@ function makeDraggable(element) {
     element.addEventListener('mousedown', function (e) {
       
         if (e.target.contentEditable === 'true') return;
-        // Enable dragging mode
+        
         isDragging = true;
         element.classList.add('dragging');
 
@@ -346,12 +320,10 @@ function makeDraggable(element) {
         initialX = parseInt(element.style.left || 0);
         initialY = parseInt(element.style.top || 0);
 
-        // Attach event listeners to track mouse movement and release
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', stopDrag);
     });
 
-    // Function to handle the dragging movement 
     function drag(e) {
         if (!isDragging) return;
 
@@ -359,12 +331,10 @@ function makeDraggable(element) {
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
 
-        // Move the element by updating its left and top positions
         element.style.left = (initialX + deltaX) + 'px';
         element.style.top = (initialY + deltaY) + 'px';
     }
 
-    // Stop dragging when mouse is released
     function stopDrag() {
         isDragging = false; 
         element.classList.remove('dragging');   
@@ -375,11 +345,10 @@ function makeDraggable(element) {
         addToHistory();
     }
 }
-// ========== END DRAGGABLE FUNCTIONALITY ==========
 
-// ========== ELEMENT SELCTION & PROPERTIES ==========
 
-// == SELECTELEMENT FINCTION ==
+
+
 function selectElement(element) {
     
     document.querySelectorAll('.canvas-element').forEach(el => el.classList.remove('selected'));
@@ -389,9 +358,9 @@ function selectElement(element) {
    
     showProperties(element);
 }
-// == END SELECTELEMENT FUNCTION ==
+ 
 
-// == SHOWPROPERTIES FUNCTION ==
+// SHOWPROPERTIES FUNCTION - Update Position/Size Type: Image/Text/Banner
 function showProperties(element) {
     const propertiesContent = document.getElementById('propertiesContent');
     const type = element.dataset.type; 
@@ -437,12 +406,10 @@ function showProperties(element) {
                 <input type="color" class="color-picker" value="#ffffff" onchange="updateTextColor(this.value)">
             </div>`;
         
-    // Setup file input and uplaod button for background image
     const fileInput = element.querySelector('input[type="file"]');
     const uploadBtn = element.querySelector('.upload-bg-image');
     const contentDiv = element.querySelector('.banner-element, .text-element');
 
-    // Trigger file selection when uplaod button is clicked
     uploadBtn.addEventListener('click', () => fileInput.click());
 
     // Handle file uplaod and set as background image
@@ -455,7 +422,7 @@ function showProperties(element) {
             contentDiv.style.backgroundImage = `url(${e.target.result})`;
             contentDiv.style.backgroundSize = 'cover';
             contentDiv.style.backgroundPosition = 'center';
-            addToHistory(); // Save state for undo/redo
+            addToHistory(); 
         };
         reader.readAsDataURL(file);
     });
@@ -479,9 +446,9 @@ function showProperties(element) {
 }   
     propertiesContent.innerHTML = html;
 }
-// == END SHOWPROPERTIES ==
+// END SHOWPROPERTIES
 
-// == UPDATEIMAGE - Update the size of the selected image ==
+
 function updateImageSize(property, value) {
     if (selectedElement && selectedElement.dataset.type === 'image') {
         const img = selectedElement.querySelector('img');
@@ -492,7 +459,7 @@ function updateImageSize(property, value) {
     }
 }
 
-// == UPADTEPOSITION - Update element postion (top/left) ==
+
 function updatePosition(property, value) {
     if (selectedElement) {
         selectedElement.style[property] = value + 'px';
@@ -500,7 +467,7 @@ function updatePosition(property, value) {
     }
 }
 
-// == UPDATESIZE - Update general element size (width/height) ==
+
 function updateSize(property, value) {
     if (selectedElement) {
         selectedElement.style[property] = value + 'px';
@@ -508,7 +475,7 @@ function updateSize(property, value) {
     }
 }
 
-// == UPDATEBACKGROUND - Update background color for banner or text element ==
+
 function updateBackground(color) {
     if (selectedElement) {
         const inner = selectedElement.querySelector('.banner-element, .text-element, [contenteditable="true"]');
@@ -519,7 +486,7 @@ function updateBackground(color) {
     }
 }
 
-// == UPDATETEXTCOLOR - Update text color for banner or text element ==
+
 function updateTextColor(color) {
     if (selectedElement) {
         const inner = selectedElement.querySelector('.banner-element, .text-element, [contenteditable="true"]');
@@ -530,7 +497,7 @@ function updateTextColor(color) {
     }
 }
 
-// == DELETESELECTED - Delete the selcted element ==
+
 function deleteSelected() {
     if (selectedElement) {
         selectedElement.remove();
@@ -541,7 +508,7 @@ function deleteSelected() {
     }
 }
 
-// == ADDTOHISTORY - Add actions to history canvas ==
+
 function addToHistory() {
     const state = canvas.innerHTML;
     actionHistory.splice(historyIndex + 1); // remove any redo states after current index
@@ -553,16 +520,16 @@ function addToHistory() {
         historyIndex--;
     }
 }
-// == UNDOACTION - Undo the last action ==
+ 
 function undoAction() {
     if (historyIndex > 0) {
         historyIndex--;
         canvas.innerHTML = actionHistory[historyIndex];
-        rebindEvents(); // Rebind element events since innerHTML replacement clears them
+        rebindEvents(); 
     }
 }
 
-// == REDOACTION - Redo the last action ==
+
 function redoAction() {
     if (historyIndex < actionHistory.length - 1) {
         historyIndex++;
@@ -571,18 +538,18 @@ function redoAction() {
     }
 }
 
-// == REBINDEVENTS - Rebind draggable and click events after undo/redo or loading a site ==
+
 function rebindEvents() {
     document.querySelectorAll('.canvas-element').forEach(element => {
         element.addEventListener('click', function (e) {
             e.stopPropagation();
             selectElement(this);
         });
-        makeDraggable(element); // Ensure element stay draggable 
+        makeDraggable(element); 
     });
 }
 
-// == MODAL VIEW ==
+
 function openSaveModal() {
     const input = document.getElementById('siteNameInput');
     input.value = currentSiteName || '';
@@ -593,7 +560,7 @@ function closeModal() {
     document.getElementById('siteNameModal').style.display = 'none';
     document.getElementById('siteNameInput').value = ''; 
 }
-// == END MODAL VIEW ==
+
 
 document.getElementById('confirmBtn').addEventListener('click', () => {
     const siteName = document.getElementById('siteNameInput').value.trim();
@@ -610,7 +577,7 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
     closeModal();
 });
 
-// == SAVESITE - Save the current site to localStorage ==
+
 function saveSite(siteName) {
     if (!currentUser) {
         alert("Please log in to save.");
@@ -631,7 +598,6 @@ function saveSite(siteName) {
     const existingSiteIndex = userSites.findIndex(site => site.name === siteName);
 
     if (existingSiteIndex !== -1) {
-        
         userSites[existingSiteIndex].content = siteHTML;
         userSites[existingSiteIndex].type = campaignType;
         userSites[existingSiteIndex].updatedAt = Date.now();
@@ -653,7 +619,7 @@ function saveSite(siteName) {
     localStorage.setItem('sites', JSON.stringify(sites));
 }
 
-// == EXPORTSITE - Export the current site as a downloadable HTML file ==
+
 function exportSite() {
     const exportCanvas = document.createElement('div');
     exportCanvas.innerHTML = canvas.innerHTML;
@@ -1022,14 +988,14 @@ function exportSite() {
     link.click();
 }
 
-// == SHOWAPP - Switch from login/dasboard to the main app ==
+
 function showApp() {
     document.getElementById('authContainer').style.display = 'none';
     loadUserSites();
     document.getElementById('dashboardContainer').style.display = 'flex';
 }
 
-// == CREATENEWSITE - Create a new site with a selected campaign type ==
+
 function createNewSite() {
     let type;
     while (true) {
@@ -1056,7 +1022,7 @@ function createNewSite() {
     canvas.dataset.campaignType = campaignType;
 }
 
-// == LOADUSERSITE - Load user sites from localStorage into the dashboard list ==
+// LOADUSERSITE - Load user sites from localStorage into the dashboard list 
 function loadUserSites() {
     const siteList = document.getElementById('siteList');
     siteList.innerHTML = '';
@@ -1083,7 +1049,7 @@ function loadUserSites() {
     });
 }
 
-// == LOADSITE - Load a saved site into the canvas ==
+// LOADSITE - Load a saved site into the canvas 
 function loadSite(id) {
     const sites = JSON.parse(localStorage.getItem('sites') || '{}');
     const userSites = sites[currentUser.userName] || [];
@@ -1095,10 +1061,10 @@ function loadSite(id) {
     document.getElementById('canvas').innerHTML = site.content;
     canvas.dataset.campaignType = site.type || "general";
     currentSiteName = site.name;
-    rebindEvents(); // Rebind events since innerHTML replacment clears them
+    rebindEvents(); 
 }
 
-// == DELETESITE - Delete a saved site ==
+
 function deleteSite(id) {
     const sites = JSON.parse(localStorage.getItem('sites') || '{}');
     let userSites = sites[currentUser.userName] || [];
@@ -1108,7 +1074,7 @@ function deleteSite(id) {
     loadUserSites();
 }
 
-// == UPDATEFONTSIZE - Update text font size ==
+
 function updateFontSize(size) {
     if (selectedElement) {
         const inner = selectedElement.querySelector('.banner-element, .text-element, [contenteditable="true"]');
@@ -1119,7 +1085,7 @@ function updateFontSize(size) {
     }
 }
 
-// == UPDATEFONTFAMILY - Update text font family ==
+
 function updateFontFamily(family) {
     if (selectedElement) {
         const inner = selectedElement.querySelector('.banner-element, .text-element, [contenteditable="true"]');
@@ -1130,7 +1096,7 @@ function updateFontFamily(family) {
     }
 }
 
-// == Marketin Template ==
+
 function startMarketing() {
   let choice;
   while (true) {
@@ -1150,9 +1116,9 @@ function startMarketing() {
   if (typeof rebindEvents === 'function') rebindEvents();
   if (typeof addToHistory === 'function') addToHistory();
 }
-// == Typeof - Tells me the data type of a vlaue. ==
+// Typeof - Tells me the data type of a vlaue. 
 
-// == Landing Template ==
+
 function startLanding() {
   let choice;
   while (true) {
@@ -1173,7 +1139,7 @@ function startLanding() {
   if (typeof addToHistory === 'function') addToHistory();
 }
 
-// === TEMPLATES SITES ===
+
 function marketingTemplate(kind) {
     const WRAP = 'word-break:break-word; overflow-wrap:anywhere;';
     const frameOpen = `<div style="max-width:650px; margin:0 auto; background: #fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; min-height:600px; padding-bottom:24px; position:relative;">`;
@@ -1240,7 +1206,7 @@ function landingTemplate(kind) {
     ${pageClose}
     `;
 }
-// === END TEMPLATES SITES ===
+
 
 function bannerBlock(text, WRAP, width, height, left, top, showUploader = false) {
   return `
@@ -1311,7 +1277,7 @@ function featureList(items, WRAP, width, top, left = 40) {
     </div>`;
 }
 
-// == PREVIEWSITE - Preview the current site in a new window == 
+// PREVIEWSITE - Preview the current site in a new window 
 function previewSite() {
     const previewWindow = window.open('', '_blank');
     const canvasContent = canvas.innerHTML;
@@ -1326,7 +1292,7 @@ function previewSite() {
         </html>
     `);
 }
-
+// PREVIEWSITECANVAS - Preview the landing and marketing templates 
 function previewSiteCanvas() {
   const canvas = document.getElementById('canvas');
   const type = canvas.dataset.campaignType || 'general';
